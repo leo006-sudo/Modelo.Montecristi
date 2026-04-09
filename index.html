@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modelo Integral de Gestión de Residuos — Montecristi</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #1A7A3A;
+  --green-dark: #0D5C28;
+  --green-light: #2ECC55;
+  --blue: #1A5FB4;
+  --blue-dark: #0E3D7A;
+  --red: #D32F2F;
+  --yellow: #FFC107;
+  --yellow-light: #FFE082;
+  --white: #FFFFFF;
+  --dark: #1A1A2E;
+  --gray: #F5F5F5;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Poppins', sans-serif;
+  color: var(--dark);
+  overflow-x: hidden;
+  background: var(--white);
+}
+
+/* ── Comic halftone dot pattern ── */
+.dots-bg {
+  position: relative;
+}
+.dots-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(0,0,0,0.06) 1px, transparent 1px);
+  background-size: 12px 12px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Lightning bolt decorations ── */
+.bolt {
+  position: absolute;
+  width: 40px;
+  height: 60px;
+  z-index: 2;
+  opacity: 0.7;
+}
+.bolt svg { width: 100%; height: 100%; }
+
+/* ── Scroll reveal ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 40%, var(--green) 100%);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 2rem;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255,193,7,0.08) 1px, transparent 1px);
+  background-size: 18px 18px;
+  pointer-events: none;
+}
+.hero-content { position: relative; z-index: 2; max-width: 900px; }
+.hero-badge {
+  display: inline-block;
+  background: var(--yellow);
+  color: var(--dark);
+  font-family: 'Bangers', cursive;
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+  padding: 6px 24px;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  transform: rotate(-2deg);
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+}
+.hero h1 {
+  font-family: 'Bangers', cursive;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  color: var(--white);
+  line-height: 1.1;
+  text-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+  margin-bottom: 1.5rem;
+  letter-spacing: 2px;
+}
+.hero h1 span {
+  color: var(--yellow);
+  display: block;
+}
+.hero p {
+  color: rgba(255,255,255,0.9);
+  font-size: 1.15rem;
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  line-height: 1.7;
+}
+.hero-cta {
+  display: inline-block;
+  background: var(--yellow);
+  color: var(--dark);
+  font-weight: 700;
+  padding: 14px 36px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: 1rem;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.25);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.hero-cta:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 rgba(0,0,0,0.3);
+}
+.scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255,255,255,0.6);
+  font-size: 0.85rem;
+  animation: bounce 2s infinite;
+  z-index: 2;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-10px); }
+}
+
+/* ── SECTION STYLES ── */
+section { position: relative; }
+
+.section-green {
+  background: var(--green);
+  color: var(--white);
+  padding: 5rem 2rem;
+}
+.section-white {
+  background: var(--white);
+  color: var(--dark);
+  padding: 5rem 2rem;
+}
+.section-dark {
+  background: var(--dark);
+  color: var(--white);
+  padding: 5rem 2rem;
+}
+.section-blue {
+  background: var(--blue);
+  color: var(--white);
+  padding: 5rem 2rem;
+}
+.section-red {
+  background: var(--red);
+  color: var(--white);
+  padding: 5rem 2rem;
+}
+
+.container { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+
+.section-label {
+  font-family: 'Bangers', cursive;
+  font-size: 0.95rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 0.5rem;
+}
+.section-title {
+  font-family: 'Bangers', cursive;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.15);
+}
+.section-desc {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  max-width: 750px;
+  opacity: 0.92;
+}
+
+/* ── CARDS GRID ── */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+.card {
+  background: rgba(255,255,255,0.12);
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  backdrop-filter: blur(6px);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+}
+.card-icon {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+.card h3 {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.6rem;
+}
+.card p {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  opacity: 0.85;
+}
+
+/* White cards */
+.card-white {
+  background: var(--white);
+  color: var(--dark);
+  border: 2px solid #e0e0e0;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.08);
+}
+.card-white:hover {
+  box-shadow: 6px 6px 0 var(--green);
+  border-color: var(--green);
+}
+
+/* ── STAT COUNTERS ── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+.stat {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: rgba(255,255,255,0.1);
+  border-radius: 16px;
+  border: 2px solid rgba(255,255,255,0.15);
+}
+.stat-number {
+  font-family: 'Bangers', cursive;
+  font-size: 3.5rem;
+  color: var(--yellow);
+  text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 0.88rem;
+  margin-top: 0.5rem;
+  opacity: 0.85;
+  line-height: 1.4;
+}
+
+/* ── CYCLE DIAGRAM ── */
+.cycle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: 3rem;
+}
+.cycle-step {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  text-align: center;
+  transition: transform 0.3s;
+  cursor: default;
+  position: relative;
+  z-index: 2;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
+}
+.cycle-step:hover { transform: scale(1.12); }
+.cycle-step span { font-size: 2rem; display: block; margin-bottom: 4px; }
+.cycle-arrow {
+  font-size: 2rem;
+  color: var(--yellow);
+  margin: 0 0.3rem;
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+
+.cs-1 { background: var(--green); color: #fff; }
+.cs-2 { background: var(--blue); color: #fff; }
+.cs-3 { background: var(--red); color: #fff; }
+.cs-4 { background: var(--yellow); color: var(--dark); }
+
+/* ── EJES (Axes) TABS ── */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+.tab-btn {
+  padding: 10px 22px;
+  border: 2px solid rgba(255,255,255,0.3);
+  background: transparent;
+  color: var(--white);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.tab-btn.active, .tab-btn:hover {
+  background: var(--yellow);
+  color: var(--dark);
+  border-color: var(--yellow);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+}
+.tab-content { display: none; animation: fadeIn 0.5s; }
+.tab-content.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── TIMELINE ── */
+.timeline {
+  position: relative;
+  margin-top: 2rem;
+  padding-left: 2rem;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--yellow);
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 2rem;
+  padding-left: 2rem;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -2rem;
+  top: 6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--yellow);
+  border: 3px solid var(--white);
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+.timeline-item h4 { font-size: 1.1rem; margin-bottom: 0.3rem; }
+.timeline-item p { font-size: 0.92rem; opacity: 0.85; line-height: 1.6; }
+
+/* ── QUOTE CALLOUT ── */
+.callout {
+  background: var(--yellow);
+  color: var(--dark);
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  position: relative;
+  box-shadow: 6px 6px 0 rgba(0,0,0,0.15);
+  transform: rotate(-0.5deg);
+}
+.callout::before {
+  content: '⚡';
+  font-size: 2rem;
+  position: absolute;
+  top: -16px;
+  left: 20px;
+}
+
+/* ── ZIGZAG DIVIDER ── */
+.zigzag {
+  height: 30px;
+  background: linear-gradient(135deg, var(--green) 25%, transparent 25%) -14px 0,
+              linear-gradient(225deg, var(--green) 25%, transparent 25%) -14px 0,
+              linear-gradient(315deg, var(--green) 25%, transparent 25%),
+              linear-gradient(45deg, var(--green) 25%, transparent 25%);
+  background-size: 28px 30px;
+  background-color: var(--white);
+}
+.zigzag-rev {
+  height: 30px;
+  background: linear-gradient(135deg, var(--white) 25%, transparent 25%) -14px 0,
+              linear-gradient(225deg, var(--white) 25%, transparent 25%) -14px 0,
+              linear-gradient(315deg, var(--white) 25%, transparent 25%),
+              linear-gradient(45deg, var(--white) 25%, transparent 25%);
+  background-size: 28px 30px;
+  background-color: var(--green);
+}
+
+/* ── CTA FINAL ── */
+.cta-final {
+  text-align: center;
+  padding: 6rem 2rem;
+  background: linear-gradient(135deg, var(--green-dark), var(--green), var(--blue));
+  color: var(--white);
+  position: relative;
+}
+.cta-final h2 {
+  font-family: 'Bangers', cursive;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  text-shadow: 3px 3px 0 rgba(0,0,0,0.25);
+  margin-bottom: 1rem;
+}
+.cta-final p {
+  font-size: 1.15rem;
+  max-width: 650px;
+  margin: 0 auto 2rem;
+  opacity: 0.9;
+  line-height: 1.7;
+}
+.cta-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+.pill {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  backdrop-filter: blur(4px);
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--dark);
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+  padding: 2rem;
+  font-size: 0.85rem;
+}
+
+/* ── NAV ── */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(26,26,46,0.92);
+  backdrop-filter: blur(12px);
+  padding: 0.8rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transform: translateY(-100%);
+  transition: transform 0.4s;
+}
+.nav.visible { transform: translateY(0); }
+.nav-brand {
+  font-family: 'Bangers', cursive;
+  color: var(--yellow);
+  font-size: 1.3rem;
+  letter-spacing: 1px;
+}
+.nav-links { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+.nav-links a {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--yellow); }
+
+/* ── TWO COL ── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-bar {
+  margin-top: 1.5rem;
+}
+.progress-item {
+  margin-bottom: 1.2rem;
+}
+.progress-item label {
+  font-weight: 600;
+  font-size: 0.92rem;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.3rem;
+}
+.progress-track {
+  height: 12px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: var(--yellow);
+  width: 0;
+  transition: width 1.5s ease;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .two-col { grid-template-columns: 1fr; gap: 2rem; }
+  .cycle { flex-direction: column; gap: 0.5rem; }
+  .cycle-arrow { transform: rotate(90deg); }
+  .nav-links { display: none; }
+  .cards { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-brand">⚡ Montecristi</div>
+  <div class="nav-links">
+    <a href="#problema">Problema</a>
+    <a href="#propuesta">Propuesta</a>
+    <a href="#ejes">Ejes</a>
+    <a href="#resultados">Resultados</a>
+    <a href="#innovacion">Innovación</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">MONTECRISTI · ECUADOR</div>
+    <h1>Modelo Integral de Gestión Inteligente y Participativa <span>de Residuos Sólidos</span></h1>
+    <p>Un sistema basado en <strong>corresponsabilidad ciudadana</strong> que integra tecnología, educación, infraestructura y control para transformar la relación entre ciudadanía, territorio y ambiente.</p>
+    <a href="#problema" class="hero-cta">Explorar el Modelo ↓</a>
+  </div>
+  <div class="scroll-hint">Desplaza para descubrir</div>
+</section>
+
+<!-- PROBLEMA -->
+<section class="section-white dots-bg" id="problema">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">El contexto</div>
+      <h2 class="section-title" style="color: var(--red);">El Problema que Enfrentamos</h2>
+      <p class="section-desc">Montecristi enfrenta desafíos estructurales que van más allá de la operación diaria del servicio de recolección. <strong>El problema es sistémico.</strong></p>
+    </div>
+    <div class="cards reveal">
+      <div class="card card-white">
+        <span class="card-icon">🏙️</span>
+        <h3>Crecimiento Desordenado</h3>
+        <p>Expansión urbana sin planificación integral de residuos.</p>
+      </div>
+      <div class="card card-white">
+        <span class="card-icon">🚛</span>
+        <h3>Rutas Ineficientes</h3>
+        <p>Recorridos sin trazabilidad ni optimización de recursos.</p>
+      </div>
+      <div class="card card-white">
+        <span class="card-icon">💸</span>
+        <h3>Altos Costos</h3>
+        <p>Gasto elevado en combustible y mantenimiento de flota.</p>
+      </div>
+      <div class="card card-white">
+        <span class="card-icon">🗑️</span>
+        <h3>Botaderos Clandestinos</h3>
+        <p>Puntos críticos de disposición ilegal sin control territorial.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DESCONEXIÓN -->
+<section class="section-green dots-bg">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">La raíz del problema</div>
+      <h2 class="section-title">El problema real no es la recolección… es la desconexión</h2>
+    </div>
+    <div class="two-col reveal">
+      <div>
+        <div class="cards" style="grid-template-columns: 1fr;">
+          <div class="card">
+            <h3>👤 Ciudadanos pasivos</h3>
+            <p>La ciudadanía no se siente parte del sistema de gestión de residuos.</p>
+          </div>
+          <div class="card">
+            <h3>🤝 Baja corresponsabilidad</h3>
+            <p>Los malos hábitos persisten porque nadie asume responsabilidad compartida.</p>
+          </div>
+          <div class="card">
+            <h3>📈 Altos costos sociales</h3>
+            <p>La ineficiencia generada por la falta de participación encarece todo el sistema.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="callout">Sin participación ciudadana, cualquier sistema colapsa.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIMITACIONES -->
+<section class="section-white dots-bg">
+  <div class="container reveal">
+    <div class="section-label" style="color: var(--blue);">Diagnóstico</div>
+    <h2 class="section-title" style="color: var(--blue-dark);">Limitaciones del modelo tradicional</h2>
+    <div class="cards">
+      <div class="card card-white">
+        <span class="card-icon">📱</span>
+        <h3>Tecnología sin retroalimentación</h3>
+        <p>Sistemas digitales que no integran la voz ciudadana.</p>
+      </div>
+      <div class="card card-white">
+        <span class="card-icon">🏗️</span>
+        <h3>Infraestructura sin apropiación</h3>
+        <p>Contenedores y puntos limpios abandonados o mal usados.</p>
+      </div>
+      <div class="card card-white">
+        <span class="card-icon">📚</span>
+        <h3>Educación discontinua</h3>
+        <p>Campañas esporádicas que no generan cambio de hábitos.</p>
+      </div>
+      <div class="card card-white">
+        <span class="card-icon">🔒</span>
+        <h3>Control institucional aislado</h3>
+        <p>Supervisión sin respaldo ni participación comunitaria.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LA PROPUESTA -->
+<section class="section-blue dots-bg" id="propuesta">
+  <div class="container reveal" style="text-align: center;">
+    <div class="section-label">La propuesta</div>
+    <h2 class="section-title" style="max-width: 800px; margin: 0 auto 1.5rem;">La gestión de residuos deja de ser institucional → Un Sistema Colaborativo Territorial</h2>
+    <p class="section-desc" style="margin: 0 auto 2rem;">Un modelo donde la <strong>ciudadanía es actora principal</strong>: no solo beneficiaria del servicio, sino corresponsable de su funcionamiento, calidad y continuidad.</p>
+
+    <h3 style="font-family: 'Bangers', cursive; font-size: 1.6rem; margin: 3rem 0 1rem; letter-spacing: 1px;">La ciudadanía activa todo</h3>
+    <div class="cycle">
+      <div class="cycle-step cs-1"><span>📖</span>Aprende</div>
+      <div class="cycle-arrow">→</div>
+      <div class="cycle-step cs-2"><span>📢</span>Reporta</div>
+      <div class="cycle-arrow">→</div>
+      <div class="cycle-step cs-3"><span>♻️</span>Usa</div>
+      <div class="cycle-arrow">→</div>
+      <div class="cycle-step cs-4"><span>👁️</span>Vigila</div>
+    </div>
+    <p style="margin-top: 2rem; opacity: 0.85; max-width: 650px; margin-left: auto; margin-right: auto;">Cada acción ciudadana retroalimenta el sistema. Este ciclo virtuoso convierte la participación en el motor de la sostenibilidad operativa y financiera.</p>
+  </div>
+</section>
+
+<!-- EJES -->
+<section class="section-green dots-bg" id="ejes">
+  <div class="container reveal">
+    <div class="section-label">Estructura del modelo</div>
+    <h2 class="section-title">Los 4 Ejes del Sistema</h2>
+    <p class="section-desc" style="margin-bottom: 2rem;">Sin ciudadanía activa, el modelo no funciona. Cada eje se alimenta y se fortalece desde la participación comunitaria.</p>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab(0)">⚡ Eje 1 · Tecnología</button>
+      <button class="tab-btn" onclick="showTab(1)">📚 Eje 2 · Educación</button>
+      <button class="tab-btn" onclick="showTab(2)">🏗️ Eje 3 · Infraestructura</button>
+      <button class="tab-btn" onclick="showTab(3)">👁️ Eje 4 · Control</button>
+    </div>
+
+    <!-- TAB 0: Tecnología -->
+    <div class="tab-content active" id="tab-0">
+      <h3 style="font-family: 'Bangers', cursive; font-size: 1.8rem; margin-bottom: 1.5rem;">Tecnología con participación social</h3>
+      <div class="cards" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+        <div class="card">
+          <h3>📡 Trazabilidad en tiempo real</h3>
+          <p>Rutas optimizadas con datos de campo y seguimiento GPS de cada recorrido.</p>
+        </div>
+        <div class="card">
+          <h3>💬 Reportes ciudadanos</h3>
+          <p>Chatbot accesible desde celular para reportar puntos críticos e incidencias.</p>
+        </div>
+        <div class="card">
+          <h3>✅ Validación social del servicio</h3>
+          <p>La percepción ciudadana complementa y corrige la supervisión técnica.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 1: Educación -->
+    <div class="tab-content" id="tab-1">
+      <h3 style="font-family: 'Bangers', cursive; font-size: 1.8rem; margin-bottom: 1.5rem;">Educación como motor de transformación social</h3>
+      <p style="margin-bottom: 1.5rem; opacity: 0.9;">La educación no informa: transforma comportamiento. Resultado: cultura ambiental sostenida desde la identidad local.</p>
+      <div class="cards" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+        <div class="card"><h3>💻 Plataforma Virtual</h3><p>Formación ambiental abierta, accesible desde cualquier dispositivo.</p></div>
+        <div class="card"><h3>📖 Cómics Educativos</h3><p>Comunicación visual atractiva para jóvenes y familias.</p></div>
+        <div class="card"><h3>🎭 Teatro Comunitario</h3><p>Activaciones en barrios y espacios públicos para impacto social.</p></div>
+        <div class="card"><h3>🏫 Escuelas y Barrios</h3><p>Programas presenciales que fortalecen la corresponsabilidad ciudadana.</p></div>
+      </div>
+    </div>
+
+    <!-- TAB 2: Infraestructura -->
+    <div class="tab-content" id="tab-2">
+      <h3 style="font-family: 'Bangers', cursive; font-size: 1.8rem; margin-bottom: 1.5rem;">Infraestructura participativa: nodos comunitarios</h3>
+      <div class="cards" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+        <div class="card"><h3>📍 Ubicación estratégica</h3><p>Puntos definidos según demanda real de la comunidad.</p></div>
+        <div class="card"><h3>🔧 Mantenimiento compartido</h3><p>La comunidad adopta y cuida su infraestructura de proximidad.</p></div>
+        <div class="card"><h3>♻️ Separación en origen</h3><p>Contenedores diseñados para fomentar la clasificación desde el hogar.</p></div>
+      </div>
+    </div>
+
+    <!-- TAB 3: Control -->
+    <div class="tab-content" id="tab-3">
+      <h3 style="font-family: 'Bangers', cursive; font-size: 1.8rem; margin-bottom: 1.5rem;">Control comunitario inteligente</h3>
+      <p style="margin-bottom: 1.5rem; opacity: 0.9;">La vigilancia deja de ser exclusivamente institucional y se convierte en una responsabilidad colectiva del territorio.</p>
+      <div class="cards" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+        <div class="card"><h3>📹 Cámaras ciudadanas</h3><p>Instaladas en viviendas comunitarias estratégicas para monitoreo de puntos críticos.</p></div>
+        <div class="card"><h3>🗺️ Monitoreo de botaderos</h3><p>Detección y eliminación colaborativa de puntos de disposición ilegal.</p></div>
+        <div class="card"><h3>🏡 Apropiación del territorio</h3><p>La comunidad protege activamente su entorno porque lo siente propio.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CICLO COMPLETO -->
+<section class="section-white dots-bg">
+  <div class="container reveal" style="text-align: center;">
+    <h2 class="section-title" style="color: var(--green-dark);">Cómo funciona el ciclo completo</h2>
+    <p class="section-desc" style="margin: 0 auto 2rem;">Los cuatro componentes se potencian mutuamente, creando un ciclo virtuoso de mejora continua.</p>
+    <div class="cards">
+      <div class="card card-white" style="border-left: 4px solid var(--blue);"><h3>⚙️ Tecnología</h3><p>Optimiza rutas</p></div>
+      <div class="card card-white" style="border-left: 4px solid var(--green);"><h3>📚 Educación</h3><p>Cambia hábitos</p></div>
+      <div class="card card-white" style="border-left: 4px solid var(--red);"><h3>👁️ Control</h3><p>Vigilancia activa</p></div>
+      <div class="card card-white" style="border-left: 4px solid var(--yellow);"><h3>🏗️ Infraestructura</h3><p>Facilita disposición</p></div>
+    </div>
+    <div class="callout" style="max-width: 700px; margin: 2.5rem auto 0;">Ningún eje funciona de forma aislada. La ciudadanía activa es el hilo conductor que conecta y potencia cada componente.</div>
+  </div>
+</section>
+
+<!-- RESULTADOS -->
+<section class="section-dark dots-bg" id="resultados">
+  <div class="container reveal">
+    <div class="section-label" style="color: var(--yellow);">Impacto proyectado</div>
+    <h2 class="section-title">Resultados Esperados del Modelo</h2>
+    <p class="section-desc" style="margin-bottom: 1rem;">El impacto técnico es resultado del impacto social.</p>
+
+    <div class="progress-bar">
+      <div class="progress-item"><label><span>Reducción en consumo de combustible</span><span>30%</span></label><div class="progress-track"><div class="progress-fill" data-width="30"></div></div></div>
+      <div class="progress-item"><label><span>Reducción en costos operativos</span><span>25%</span></label><div class="progress-track"><div class="progress-fill" data-width="25"></div></div></div>
+      <div class="progress-item"><label><span>Incremento en participación ciudadana</span><span>60%</span></label><div class="progress-track"><div class="progress-fill" data-width="60"></div></div></div>
+      <div class="progress-item"><label><span>Eliminación de botaderos clandestinos</span><span>80%</span></label><div class="progress-track"><div class="progress-fill" data-width="80"></div></div></div>
+      <div class="progress-item"><label><span>Cobertura territorial verificada</span><span>95%</span></label><div class="progress-track"><div class="progress-fill" data-width="95"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACTO SOCIAL -->
+<section class="section-green dots-bg">
+  <div class="container reveal">
+    <div class="section-label">Transformación real</div>
+    <h2 class="section-title">Impacto Social: Transformación comunitaria profunda</h2>
+    <div class="cards" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+      <div class="card">
+        <h3>🙋 Ciudadanía co-gestora</h3>
+        <p>De usuarios pasivos a actores operativos con voz y responsabilidad.</p>
+      </div>
+      <div class="card">
+        <h3>🔄 Cambio de hábitos sostenible</h3>
+        <p>Comportamientos transformados desde la educación y la práctica cotidiana.</p>
+      </div>
+      <div class="card">
+        <h3>🤝 Tejido social fortalecido</h3>
+        <p>La gestión de residuos se convierte en espacio de cohesión comunitaria.</p>
+      </div>
+    </div>
+    <div class="callout">El mayor resultado es cultural: una comunidad que cuida su territorio porque se siente dueña de él.</div>
+  </div>
+</section>
+
+<!-- EFICIENCIA ECONÓMICA -->
+<section class="section-white dots-bg">
+  <div class="container reveal">
+    <h2 class="section-title" style="color: var(--green-dark);">Eficiencia económica: la participación reduce costos</h2>
+    <div class="two-col">
+      <div>
+        <p class="section-desc"><strong>Menos gasto público, más impacto.</strong> Cuando la ciudadanía participa activamente, el sistema requiere menos intervención correctiva y menos recursos operativos.</p>
+        <p class="section-desc" style="margin-top: 1rem;">Sistema más eficiente, más sostenible y menos costoso para el municipio.</p>
+      </div>
+      <div class="cards" style="grid-template-columns: 1fr;">
+        <div class="card card-white" style="border-left: 4px solid var(--green);"><h3>↓ Menos recorridos innecesarios</h3></div>
+        <div class="card card-white" style="border-left: 4px solid var(--blue);"><h3>↓ Menos mantenimiento reactivo</h3></div>
+        <div class="card card-white" style="border-left: 4px solid var(--red);"><h3>↓ Menos limpieza correctiva de botaderos</h3></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INNOVACIÓN -->
+<section class="section-blue dots-bg" id="innovacion">
+  <div class="container reveal">
+    <div class="section-label">Lo que nos diferencia</div>
+    <h2 class="section-title">¿Qué hace diferente a este modelo?</h2>
+    <div class="cards" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+      <div class="card">
+        <h3>📱 Tecnología + participación</h3>
+        <p>La comunidad lo alimenta y lo valida en tiempo real. No es solo un sistema digital.</p>
+      </div>
+      <div class="card">
+        <h3>👥 Ciudadanía operativa</h3>
+        <p>La ciudadanía no es solo usuaria: es actora con rol en la operación del sistema.</p>
+      </div>
+      <div class="card">
+        <h3>📉 Reducción de costos conductual</h3>
+        <p>El ahorro no viene de la tecnología sola, sino del cambio de comportamiento a escala.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POR QUÉ INNOVADOR -->
+<section class="section-white dots-bg">
+  <div class="container reveal">
+    <h2 class="section-title" style="color: var(--blue-dark); text-align: center;">¿Por qué este modelo es innovador?</h2>
+    <div class="timeline" style="max-width: 700px; margin: 2rem auto 0;">
+      <div class="timeline-item"><h4 style="color: var(--green);">01 · Actúa sobre causas, no síntomas</h4><p>Aborda las raíces del problema sistémico de gestión.</p></div>
+      <div class="timeline-item"><h4 style="color: var(--blue);">02 · Integra tecnología y cambio social</h4><p>Combina herramientas digitales con transformación cultural.</p></div>
+      <div class="timeline-item"><h4 style="color: var(--red);">03 · Genera eficiencia y ciudadanía activa</h4><p>Los dos pilares de la sostenibilidad se construyen juntos.</p></div>
+      <div class="timeline-item"><h4 style="color: var(--green-dark);">04 · Es replicable a escala nacional</h4><p>Metodología documentada, transferible a cualquier municipio.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- REPLICABILIDAD -->
+<section class="section-dark dots-bg">
+  <div class="container reveal" style="text-align: center;">
+    <div class="section-label" style="color: var(--yellow);">Escalabilidad</div>
+    <h2 class="section-title">Replicabilidad: un modelo escalable a nivel nacional</h2>
+    <p class="section-desc" style="margin: 0 auto 2rem;">Este modelo no depende de grandes inversiones ni de infraestructura compleja. Usa lo que cada territorio ya tiene: <strong>ciudadanos dispuestos a participar</strong> y tecnología de bajo costo.</p>
+    <p class="section-desc" style="margin: 0 auto 2rem;">Cualquier municipio —pequeño, mediano o grande— puede implementarlo, adaptarlo y escalarlo.</p>
+    <div class="callout" style="max-width: 700px; margin: 0 auto;">Un modelo probado en Montecristi puede convertirse en política pública nacional.</div>
+  </div>
+</section>
+
+<!-- FINANCIAMIENTO -->
+<section class="section-green dots-bg">
+  <div class="container reveal" style="text-align: center;">
+    <h2 class="section-title">Uso del financiamiento: de modelo piloto a política pública</h2>
+    <div class="cta-pills" style="margin-bottom: 2rem;">
+      <div class="pill">🏘️ Escalar comunidades</div>
+      <div class="pill">💻 Fortalecer tecnología</div>
+      <div class="pill">👁️ Control comunitario</div>
+      <div class="pill">📚 Ampliar educación</div>
+    </div>
+    <p class="section-desc" style="margin: 0 auto;">El financiamiento no solo mejora Montecristi: convierte este modelo en una solución replicable que puede transformar la gestión de residuos en cualquier municipio del país.</p>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final dots-bg">
+  <div class="container reveal">
+    <h2>Montecristi no solo mejora la recolección</h2>
+    <p style="font-size: 1.3rem; font-family: 'Bangers', cursive; letter-spacing: 1px; color: var(--yellow); text-shadow: 2px 2px 0 rgba(0,0,0,0.3);">Transforma la relación entre ciudadanía, territorio y ambiente</p>
+    <div class="stats" style="max-width: 800px; margin: 2rem auto 0;">
+      <div class="stat">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚙️</div>
+        <div class="stat-label"><strong>Técnicamente sólido</strong><br>Cuatro ejes integrados con tecnología, datos y control de calidad</div>
+      </div>
+      <div class="stat">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">💪</div>
+        <div class="stat-label"><strong>Socialmente poderoso</strong><br>La comunidad como motor, no como receptora del servicio</div>
+      </div>
+      <div class="stat">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔄</div>
+        <div class="stat-label"><strong>Altamente replicable</strong><br>Escalable a cualquier municipio con bajo costo de implementación</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Modelo Integral de Gestión de Residuos Sólidos · Montecristi, Ecuador</p>
+</footer>
+
+<script>
+// Nav visibility on scroll
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('visible', window.scrollY > 400);
+});
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.15 });
+reveals.forEach(el => observer.observe(el));
+
+// Tabs
+function showTab(i) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + i).classList.add('active');
+  document.querySelectorAll('.tab-btn')[i].classList.add('active');
+}
+
+// Progress bars animate on scroll
+const progressObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.progress-fill').forEach(bar => {
+        bar.style.width = bar.dataset.width + '%';
+      });
+      progressObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.progress-bar').forEach(el => progressObserver.observe(el));
+</script>
+</body>
+</html>
